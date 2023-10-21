@@ -1,0 +1,20 @@
+function SendMessage(Message)
+    if game:GetService("ReplicatedStorage"):FindFirstChild('DefaultChatSystemChatEvents') then
+        game:GetService("ReplicatedStorage"):FindFirstChild('DefaultChatSystemChatEvents').SayMessageRequest:FireServer(tostring(Message), "All");
+    else
+        game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(tostring(Message))
+    end
+end
+
+local endpoint = "http://labs.bible.org/api/?passage=random&type=json"
+local response = game.HttpService:JSONDecode(game:HttpGet(endpoint))
+
+if response == nil then
+    return
+else
+    if response[1].bookname .. response[1].chapter .. response[1].verse .. response[1].text == nil then
+        return
+    end
+
+    SendMessage(response[1].bookname .. ": " .. response[1].chapter .. ":" .. response[1].verse .. " " .. response[1].text)
+end
